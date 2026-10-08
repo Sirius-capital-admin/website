@@ -2,7 +2,7 @@
   "use strict";
 
   var cfg = window.SIRIUS_CONFIG || {};
-  var LIVE = !!cfg.apiBase;
+  var LIVE = cfg.live === true || !!cfg.apiBase;
   var app = document.getElementById("app");
   var modeNote = document.getElementById("mode-note");
 
@@ -153,7 +153,7 @@
   }
 
   function api(path) {
-    return fetch(cfg.apiBase.replace(/\/$/, "") + path, {
+    return fetch((cfg.apiBase || "").replace(/\/$/, "") + path, {
       headers: { "X-Access-Code": getCode() }
     }).then(function (res) {
       if (res.status === 401) { var err = new Error("auth"); err.auth = true; throw err; }
@@ -582,7 +582,7 @@
     }).catch(function (err) {
       if (err.auth) { setCode(""); return showGate("That access code was not accepted."); }
       app.textContent = "";
-      app.appendChild(el("p", { class: "chart-msg", text: "The portfolio could not load. Check the proxy address in js/config.js and that the proxy is running." }));
+      app.appendChild(el("p", { class: "chart-msg", text: "The portfolio could not load. Check the environment variables in Vercel and that the Trading 212 key is valid." }));
     });
   }
 
