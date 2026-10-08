@@ -1,0 +1,10 @@
+name = "sirius-portfolio"
+main = "index.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+# The exact address your website is served from, no trailing slash.
+# Example for GitHub Pages: https://sirius-capital-admin.github.io
+ALLOWED_ORIGIN = "https://sirius-capital-admin.github.io"
+# Optional. Maps Trading 212 tickers to market data symbols for non-US shares.
+# SYMBOL_MAP = '{"VOD_EQ":"VOD.LON"}'

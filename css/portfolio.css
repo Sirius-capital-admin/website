@@ -1,0 +1,205 @@
+/* Portfolio page. Builds on styles.css tokens. */
+
+:root {
+  --gain: #1d5fb4;
+  --loss: #b8500a;
+  --line: #0e1a2e;
+  --grid: #d5dde8;
+  --buy: #2443c4;
+  --card: #ffffff;
+}
+
+.pf-head {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem) var(--gutter) 1.5rem;
+}
+
+.pf-head h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.6rem;
+}
+
+.pf-head p { margin: 0; color: var(--ink-soft); max-width: 60ch; }
+
+.mode-note {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--rule);
+  background: var(--paper-deep);
+  font-size: 0.92rem;
+}
+
+.pf-wrap {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 0 var(--gutter) clamp(3rem, 7vw, 6rem);
+}
+
+/* Summary */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin: 0 0 2rem;
+}
+
+.summary dt { color: var(--ink-soft); font-size: 0.95rem; }
+.summary dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.up { color: var(--gain); }
+.down { color: var(--loss); }
+
+/* Layout: holdings left, detail right */
+.pf-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.holdings h2, .detail h2, .perf h2 { font-size: 1.35rem; margin-bottom: 0.75rem; }
+
+.holding-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+
+.holding-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 1rem;
+  width: 100%;
+  padding: 0.8rem 0.75rem;
+  border-bottom: 1px solid var(--rule);
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+
+.holding-btn:hover { background: var(--paper-deep); }
+.holding-btn[aria-pressed="true"] { background: var(--card); border-left-color: var(--buy); }
+.holding-btn:focus-visible { outline: 3px solid var(--sapphire); outline-offset: -3px; }
+
+.h-sym { font-weight: 600; }
+.h-name { color: var(--ink-soft); font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.h-val, .h-ret { text-align: right; font-variant-numeric: tabular-nums; }
+.h-ret { font-size: 0.9rem; }
+
+/* Detail */
+.detail { min-width: 0; }
+
+.detail-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.detail-top h2 { margin: 0; }
+.price-now {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-variant-numeric: tabular-nums;
+}
+.price-change { font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+
+.ranges { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 0.75rem; }
+
+.range-btn {
+  font: inherit;
+  padding: 0.35rem 0.8rem;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+}
+.range-btn:hover { border-color: var(--ink); }
+.range-btn[aria-pressed="true"] { background: var(--ink); color: var(--starlight); border-color: var(--ink); }
+
+.chart-box { position: relative; background: var(--card); border: 1px solid var(--rule); }
+.chart-box svg { width: 100%; height: auto; touch-action: pan-y; }
+.chart-msg {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.tip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--starlight);
+  padding: 0.45rem 0.7rem;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+}
+
+.legend-note { color: var(--ink-soft); font-size: 0.9rem; margin: 0.6rem 0 0; }
+.swatch-line { display: inline-block; width: 1.4rem; border-top: 2px dashed var(--buy); vertical-align: middle; margin-right: 0.4rem; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 1rem 1.5rem;
+  margin: 1.5rem 0 0;
+}
+.stats dt { color: var(--ink-soft); font-size: 0.9rem; }
+.stats dd { margin: 0.1rem 0 0; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+details.table-view { margin-top: 1rem; }
+details.table-view summary { cursor: pointer; }
+.table-scroll { overflow-x: auto; margin-top: 0.5rem; }
+.table-scroll table { border-collapse: collapse; min-width: 22rem; width: 100%; font-variant-numeric: tabular-nums; }
+.table-scroll th, .table-scroll td { text-align: left; padding: 0.35rem 0.75rem 0.35rem 0; border-bottom: 1px solid var(--rule); }
+
+/* News */
+.news { margin-top: 2.5rem; }
+.news h3 { font-size: 1.2rem; }
+.news-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.news-list li { padding: 0.8rem 0; border-bottom: 1px solid var(--rule); }
+.news-list a { font-weight: 600; text-decoration: none; }
+.news-list a:hover { text-decoration: underline; }
+.news-list .meta { color: var(--ink-soft); font-size: 0.88rem; margin-top: 0.15rem; }
+.news-list .placeholder { color: var(--ink-soft); }
+
+/* Performance */
+.perf { margin-top: clamp(3rem, 7vw, 5rem); border-top: 1px solid var(--rule); padding-top: 2rem; }
+.perf p.lead { margin: 0 0 1rem; color: var(--ink-soft); max-width: 60ch; }
+
+/* Access gate */
+.gate { max-width: 26rem; margin: 2rem 0; }
+.gate label { display: block; font-weight: 600; margin-bottom: 0.4rem; }
+.gate input {
+  font: inherit; width: 100%; padding: 0.7rem 0.8rem;
+  border: 1px solid var(--ink); background: var(--card); color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.gate .button { cursor: pointer; font: inherit; font-weight: 600; }
+.gate .err { color: var(--loss); margin: 0.5rem 0 0; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+@media (max-width: 60rem) {
+  .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pf-grid { grid-template-columns: 1fr; }
+}
