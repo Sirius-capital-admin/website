@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Journey | Sirius Capital</title>
+  <meta name="description" content="A scroll-driven journey through five scenes: summit, sketch, storm, world and forest.">
+  <meta name="color-scheme" content="dark">
+  <script>
+    (function () {
+      var d = document.documentElement, ok = false;
+      try {
+        var c = document.createElement("canvas");
+        var g = c.getContext("webgl2") || c.getContext("webgl");
+        ok = !!g;
+        if (g && g.getExtension) { var x = g.getExtension("WEBGL_lose_context"); if (x) x.loseContext(); }
+      } catch (e) { ok = false; }
+      var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+      d.classList.add(ok && !reduce ? "immersive" : "static");
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/journey.css">
+</head>
+<body>
+  <canvas id="gl" aria-hidden="true"></canvas>
+
+  <div class="loader" id="loader" role="status" aria-live="polite">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" /><circle id="loaderArc" cx="24" cy="24" r="21" /></svg>
+    <span>Loading</span>
+  </div>
+
+  <header class="top">
+    <a class="brand" href="../index.html" aria-label="Sirius Capital, home">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12 7.2-1.2 11.4-5.4 12-12z" fill="currentColor"/></svg>
+      <span>Sirius</span>
+    </a>
+    <nav aria-label="Main">
+      <a href="../index.html">Home</a>
+      <a href="../portfolio.html">Portfolio</a>
+    </nav>
+  </header>
+
+  <nav class="ticks" id="ticks" aria-label="Scenes"></nav>
+
+  <div class="counter" id="counter" aria-hidden="true">
+    <span class="num"><span id="counterNum">01</span></span>
+    <span class="bar"><i id="counterBar"></i></span>
+    <span class="total">05</span>
+    <span class="label"><span id="counterLabel">Summit</span></span>
+  </div>
+
+  <a class="ring" id="ring" href="#end" aria-label="Scroll to explore">
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <circle class="track" cx="24" cy="24" r="21" />
+      <circle class="arc" id="ringArc" cx="24" cy="24" r="21" />
+      <path class="chev" d="M18 21.5l6 6 6-6" />
+    </svg>
+  </a>
+
+  <main id="main">
+
+    <section class="txt s1" id="s1" data-label="Summit">
+      <div class="inner">
+        <h1 class="hero-title" aria-label="Sirius Capital">
+          <span class="word"><span class="ch">S</span><span class="ch">I</span><span class="ch">R</span><span class="ch">I</span><span class="ch">U</span><span class="ch">S</span></span>
+          <span class="word"><span class="ch">C</span><span class="ch">A</span><span class="ch">P</span><span class="ch">I</span><span class="ch">T</span><span class="ch">A</span><span class="ch">L</span></span>
+        </h1>
+        <p class="tag ln"><span>A long view on patient capital</span></p>
+      </div>
+    </section>
+
+    <section class="txt s2" id="s2" data-label="Sketch">
+      <div class="inner">
+        <h2>
+          <span class="ln"><span>Drawn before</span></span>
+          <span class="ln"><span>it is bought</span></span>
+        </h2>
+        <p class="body ln"><span>Every position begins as a sketch. We write down why we own it and what would change our mind, then we hold ourselves to the page.</span></p>
+      </div>
+    </section>
+
+    <section class="txt s3" id="s3" data-label="Storm">
+      <div class="inner">
+        <h2 class="sr-only">Weathering the storm</h2>
+        <ul class="points">
+          <li><i class="dia" aria-hidden="true"></i><span class="ln"><span>Markets turn rough without warning.</span></span></li>
+          <li><i class="dia" aria-hidden="true"></i><span class="ln"><span>We size positions for the storm, not the sunshine.</span></span></li>
+          <li><i class="dia" aria-hidden="true"></i><span class="ln"><span>Patience is a position.</span></span></li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="ship" id="ship" aria-hidden="true">
+      <svg viewBox="0 0 640 420" preserveAspectRatio="xMidYMax meet">
+        <g class="ship-body">
+          <path class="hull" d="M30 318 L596 318 C578 356 536 376 488 380 L150 380 C96 374 56 354 30 318 Z" />
+          <path class="hull2" d="M30 318 L596 318 L588 330 L40 330 Z" />
+          <path class="mast" d="M168 318 V70 M312 318 V34 M456 318 V84 M596 318 L640 286" />
+          <path class="sail" d="M110 82 Q168 94 226 82 L218 168 Q168 180 118 168 Z" />
+          <path class="sail" d="M100 182 Q168 196 236 182 L246 290 Q168 306 90 290 Z" />
+          <path class="sail" d="M250 44 Q312 58 374 44 L366 140 Q312 154 258 140 Z" />
+          <path class="sail" d="M240 154 Q312 170 384 154 L396 296 Q312 314 228 296 Z" />
+          <path class="sail" d="M398 94 Q456 106 514 94 L506 176 Q456 188 406 176 Z" />
+          <path class="sail" d="M390 190 Q456 204 522 190 L532 296 Q456 312 380 296 Z" />
+          <path class="jib" d="M600 314 L640 286 L520 150 Z" />
+          <path class="stay" d="M168 70 L30 318 M312 34 L168 70 M456 84 L312 34 M596 318 L456 84" />
+        </g>
+      </svg>
+    </div>
+
+    <section class="txt s4" id="s4" data-label="World">
+      <div class="inner">
+        <h2>
+          <span class="ln"><span>One world</span></span>
+          <span class="ln"><span>of businesses</span></span>
+        </h2>
+        <p class="body ln"><span>We look for companies that will matter in ten years, wherever they are.</span></p>
+      </div>
+    </section>
+
+    <section class="txt s5" id="s5" data-label="Growth">
+      <div class="inner">
+        <h2>
+          <span class="ln"><span>Growth</span></span>
+          <span class="ln"><span>takes years</span></span>
+        </h2>
+        <div class="paras">
+          <p class="ln"><span>A forest is not built in a season. The best businesses compound quietly, in the shade of louder ones.</span></p>
+          <p class="ln"><span>We plant carefully, we water patiently, and we stay out of the way.</span></p>
+          <p class="ln"><span>This is an investing test website. Nothing here is financial advice.</span></p>
+          <p class="cta ln"><span><a href="../portfolio.html">Open portfolio</a></span></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="spacer"><span id="end"></span></div>
+
+  <footer class="foot">
+    <span>&copy; <span id="year">2026</span> Sirius Capital. An investing test website.</span>
+    <a href="../index.html">Home</a>
+  </footer>
+
+  <script src="js/shaders.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

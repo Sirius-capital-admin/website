@@ -1,0 +1,209 @@
+/* Journey: five scenes in one scroll. Base rules are the static fallback;
+   html.immersive switches on the fullscreen, scroll-driven version. */
+
+:root {
+  --font: "Jost", "Josefin Sans", "Helvetica Neue", Arial, sans-serif;
+  --ui: #f3e6d4;
+  --gold: #d9b36a;
+  --navy: #0a1424;
+  --cream: #efe6d2;
+  --storm: #4a5560;
+  --forest: #0f2a22;
+  --pad: clamp(1.25rem, 3.2vw, 3.25rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: #05070b; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: #05070b;
+  color: var(--ui);
+  font-family: var(--font);
+  font-weight: 300;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+h1, h2 {
+  margin: 0;
+  font-weight: 200;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+/* ---------- Text ---------- */
+
+.hero-title { font-size: clamp(2rem, 6.4vw, 7.75rem); letter-spacing: .38em; margin-right: -.38em; }
+.hero-title .word { display: inline-block; white-space: nowrap; }
+.hero-title .word + .word { margin-left: .5em; }
+.ch { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; }
+.ch > span { display: inline-block; }
+
+h2 { font-size: clamp(1.5rem, 3.4vw, 3.6rem); letter-spacing: .3em; }
+.ln { display: block; overflow: hidden; padding-bottom: .14em; }
+.ln > span { display: block; }
+
+.tag {
+  margin: 1.6rem 0 0;
+  font-size: clamp(.72rem, .95vw, .95rem);
+  letter-spacing: .5em;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+.body, .paras p {
+  margin: 1.6rem 0 0;
+  font-size: clamp(.9rem, 1.05vw, 1.05rem);
+  letter-spacing: .06em;
+  line-height: 1.95;
+  max-width: 34ch;
+}
+
+.points { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; }
+.points li { display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; align-items: start; font-size: clamp(.95rem, 1.35vw, 1.35rem); letter-spacing: .12em; line-height: 1.6; }
+.dia { width: .5rem; height: .5rem; border: 1px solid var(--gold); transform: rotate(45deg); margin-top: .62em; flex: none; }
+
+.cta a { text-decoration: none; letter-spacing: .3em; text-transform: uppercase; font-size: .78rem; border-bottom: 1px solid var(--gold); padding-bottom: .4rem; }
+.cta { margin-top: 2.2rem !important; }
+
+/* ---------- Fixed UI ---------- */
+
+.top {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: calc(var(--pad) * .8) var(--pad);
+  font-size: .7rem; letter-spacing: .32em; text-transform: uppercase;
+  color: var(--ui); transition: color .6s;
+}
+.top .brand { display: inline-flex; align-items: center; gap: .7rem; text-decoration: none; }
+.top .brand svg { width: .95rem; height: .95rem; }
+.top nav { display: flex; gap: 2.2rem; }
+.top nav a { text-decoration: none; opacity: .75; transition: opacity .3s; }
+.top nav a:hover { opacity: 1; }
+
+.ticks { position: fixed; left: var(--pad); top: 50%; transform: translateY(-50%); z-index: 20; display: grid; gap: .9rem; }
+.ticks button {
+  all: unset; box-sizing: border-box; cursor: pointer; display: block;
+  width: 1.5rem; height: 1px; background: var(--ui); opacity: .35;
+  position: relative; transition: width .5s cubic-bezier(.16,1,.3,1), opacity .4s, background-color .6s;
+}
+.ticks button::after { content: ""; position: absolute; inset: -.7rem -.3rem; }
+.ticks button.on { width: 3rem; opacity: 1; }
+.ticks button:focus-visible { outline: 2px solid var(--gold); outline-offset: 6px; }
+
+.counter {
+  position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20;
+  display: flex; align-items: center; gap: .9rem;
+  font-size: .7rem; letter-spacing: .32em; text-transform: uppercase; color: var(--ui); transition: color .6s;
+}
+.counter .num, .counter .label { overflow: hidden; display: inline-block; }
+.counter .num > span, .counter .label > span { display: inline-block; }
+.counter .bar { width: 4.5rem; height: 1px; background: currentColor; opacity: .3; position: relative; }
+.counter .bar i { position: absolute; left: 0; top: 0; height: 1px; width: 100%; background: currentColor; transform-origin: left; transform: scaleX(0); }
+.counter .label { margin-left: 1.2rem; opacity: .65; }
+.counter .total { opacity: .55; }
+
+.ring { position: fixed; right: var(--pad); bottom: var(--pad); z-index: 20; width: 3.25rem; height: 3.25rem; color: var(--ui); transition: color .6s; }
+.ring svg { width: 100%; height: 100%; display: block; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke: currentColor; stroke-width: 1; }
+.ring .track { opacity: .28; }
+.ring .arc { stroke-dasharray: 131.95; stroke-dashoffset: 131.95; }
+.ring .chev { fill: none; stroke: currentColor; stroke-width: 1; transform: rotate(90deg); transform-origin: 24px 24px; animation: nudge 2.4s ease-in-out infinite; }
+@keyframes nudge { 0%, 100% { transform: rotate(90deg) translateX(-1.5px); } 50% { transform: rotate(90deg) translateX(2.5px); } }
+
+html[data-tone="dark"] .top,
+html[data-tone="dark"] .counter,
+html[data-tone="dark"] .ring { color: #25262b; }
+
+.loader {
+  position: fixed; inset: 0; z-index: 50; background: #05070b;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.1rem;
+  font-size: .7rem; letter-spacing: .4em; text-transform: uppercase; color: var(--ui);
+}
+.loader svg { width: 3.25rem; height: 3.25rem; transform: rotate(-90deg); }
+.loader circle { fill: none; stroke: currentColor; stroke-width: 1; opacity: .3; }
+.loader #loaderArc { opacity: 1; stroke-dasharray: 131.95; stroke-dashoffset: 131.95; }
+
+#gl { display: none; }
+.ship { display: none; }
+
+/* ---------- Static fallback (reduced motion or no WebGL) ---------- */
+
+html.static .top { position: absolute; }
+html.static .ticks, html.static .counter, html.static .ring, html.static .loader { display: none; }
+html.static .txt {
+  min-height: 100vh; display: flex; align-items: center; padding: 6rem var(--pad);
+}
+html.static .s1 { background: radial-gradient(120% 80% at 70% 80%, #6b3d22 0%, #14223a 38%, #070d1a 100%); justify-content: center; text-align: center; }
+html.static .s2 { background: #efe6d2; color: #25262b; }
+html.static .s3 { background: linear-gradient(#1b2025, #4a5560 70%, #1f2a30); }
+html.static .s4 { background: radial-gradient(70% 70% at 50% 100%, #14284a 0%, #05070b 70%); text-align: center; justify-content: center; }
+html.static .s5 { background: radial-gradient(90% 70% at 15% 0%, #5a5a2a 0%, #0f2a22 45%, #04100c 100%); }
+html.static .s5 .inner { display: grid; gap: 2rem; }
+html.static .s4 .body, html.static .s4 .inner { margin-inline: auto; }
+html.static .hero-title { font-size: clamp(1.6rem, 6vw, 4rem); }
+html.static #spacer { display: none; }
+html.static .foot { padding: 2rem var(--pad); background: #05070b; }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; }
+html.immersive .foot { display: none; }
+
+/* ---------- Immersive ---------- */
+
+html.immersive, html.immersive body { overflow-x: hidden; }
+html.immersive body { background: #000; }
+html.immersive #gl { display: block; position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100svh; z-index: 0; }
+html.immersive #spacer { height: 1100vh; position: relative; }
+html.immersive #end { position: absolute; bottom: 0; left: 0; width: 1px; height: 1px; }
+
+html.immersive main { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
+html.immersive .txt { position: absolute; visibility: hidden; opacity: 0; will-change: transform; }
+html.immersive .txt a { pointer-events: auto; }
+html.immersive .inner { will-change: transform, opacity; }
+
+html.immersive .s1 { left: 0; right: 0; top: 36%; text-align: center; }
+html.immersive .s2 { left: clamp(4.5rem, 9vw, 9rem); top: 12%; width: min(40rem, 80vw); color: #25262b; }
+html.immersive .s2 .body { max-width: 46ch; }
+html.immersive .s2 .dia { border-color: #7b6a45; }
+html.immersive .s3 { left: clamp(4.5rem, 9vw, 9rem); top: 15%; width: min(32rem, 80vw); color: #eef2f4; }
+html.immersive .s4 { left: 0; right: 0; top: 11%; text-align: center; color: #eef2f7; }
+html.immersive .s4 .body { margin-inline: auto; }
+html.immersive .s5 { left: 0; right: 0; top: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(4.5rem, 7vw, 8rem) 0 clamp(4.5rem, 9vw, 9rem); color: #f5ecd2; }
+html.immersive .s5 .inner { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 4rem; }
+html.immersive .s5 .paras { width: min(24rem, 32vw); }
+html.immersive .s5 h2 { font-size: clamp(1.9rem, 4.6vw, 5.2rem); }
+
+html.immersive .ship {
+  display: block; position: fixed; left: 0; z-index: 4; pointer-events: none; opacity: 0; visibility: hidden;
+  width: clamp(14rem, 24vw, 30rem); bottom: calc(30svh - 3.6%);
+  will-change: transform;
+}
+html.immersive .ship svg { width: 100%; height: auto; display: block; overflow: visible; }
+.ship .hull { fill: #090c0f; }
+.ship .hull2 { fill: #1c2328; }
+.ship .mast { fill: none; stroke: #0b0f12; stroke-width: 3; }
+.ship .stay { fill: none; stroke: #0b0f12; stroke-width: 1; opacity: .7; }
+.ship .sail { fill: #11161a; stroke: rgba(210, 220, 225, .35); stroke-width: 1.5; }
+.ship .jib { fill: #11161a; stroke: rgba(210, 220, 225, .3); stroke-width: 1.2; }
+
+@media (max-width: 52rem) {
+  .top nav { gap: 1.2rem; }
+  .counter .bar, .counter .label { display: none; }
+  .ticks { display: none; }
+  html.immersive .s2, html.immersive .s3 { left: var(--pad); }
+  html.immersive .s5 { align-items: flex-start; padding: 22svh var(--pad) 0; }
+  html.immersive .s5 .inner { flex-direction: column; align-items: flex-start; gap: 1.6rem; }
+  html.immersive .s5 .paras { width: min(26rem, 86vw); }
+  .hero-title { letter-spacing: .22em; margin-right: -.22em; }
+  h2 { letter-spacing: .2em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring .chev { animation: none; }
+}
