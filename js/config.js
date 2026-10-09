@@ -1,8 +1,8 @@
 // Portfolio page settings.
-// live: false shows clearly labelled sample data.
-// live: true reads your real account through the /api routes on this site.
-// Set it to true after you add your environment variables in Vercel (see SETUP.md).
+// live: true reads your real Trading 212 account through the /api routes on this site.
+// live: false shows clearly labelled sample data instead.
 window.SIRIUS_CONFIG = {
-  live: false,
-  apiBase: "" // leave empty when the API is hosted on the same site, as on Vercel
+  live: true,
+  apiBase: "", // leave empty when the API is hosted on the same site, as on Vercel
+  refreshSeconds: 30
 };

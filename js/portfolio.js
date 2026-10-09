@@ -164,7 +164,7 @@
 
   function loadPortfolio() {
     if (!LIVE) {
-      return Promise.resolve({ account: { currency: "GBP" }, positions: samplePositions() });
+      return Promise.resolve({ account: { currency: "GBP", cash: { availableToTrade: 412.5, inPies: 0, reservedForOrders: 0 } }, positions: samplePositions() });
     }
     return api("/api/portfolio");
   }
@@ -264,15 +264,24 @@
   }
 
   function renderSummary() {
-    var cur = state.account.currency;
+    var a = state.account, cur = a.currency;
     var value = 0, cost = 0, pnl = 0;
     state.positions.forEach(function (p) { value += p.value; cost += p.cost; pnl += p.pnl; });
+    var inv = a.investments;
+    if (inv && typeof inv.currentValue === "number") {
+      value = inv.currentValue; cost = inv.totalCost; pnl = inv.unrealizedProfitLoss;
+    }
+    var cash = a.cash && typeof a.cash.availableToTrade === "number" ? a.cash.availableToTrade : null;
+    var total = typeof a.totalValue === "number" ? a.totalValue : value + (cash || 0);
     var ret = cost ? (pnl / cost) * 100 : 0;
+
     ui.summary.textContent = "";
-    ui.summary.appendChild(stat("Portfolio value", money(value, cur)));
-    ui.summary.appendChild(stat("Amount invested", money(cost, cur)));
-    ui.summary.appendChild(stat("Profit or loss", arrow(pnl) + " " + (pnl >= 0 ? "+" : "−") + money(Math.abs(pnl), cur), tone(pnl)));
-    ui.summary.appendChild(stat("Return", arrow(ret) + " " + signed(ret, 2, "%"), tone(ret)));
+    ui.summary.appendChild(stat("Account balance", money(total, cur)));
+    ui.summary.appendChild(stat("Invested", money(value, cur)));
+    ui.summary.appendChild(stat("Cash available", cash === null ? "Not available" : money(cash, cur)));
+    var plItem = stat("Profit or loss", arrow(pnl) + " " + (pnl >= 0 ? "+" : "\u2212") + money(Math.abs(pnl), cur), tone(pnl));
+    plItem.querySelector("dd").appendChild(el("span", { class: "sub", text: signed(ret, 2, "%") + " return on invested cost" }));
+    ui.summary.appendChild(plItem);
   }
 
   function renderList() {
@@ -303,6 +312,18 @@
 
   /* ---------- detail ---------- */
 
+  function updateDetailNumbers(pos) {
+    ui.price.textContent = money(pos.price, pos.currency);
+    var ret = pos.cost ? (pos.pnl / pos.cost) * 100 : 0;
+    ui.stats.textContent = "";
+    ui.stats.appendChild(stat("Shares", num(pos.quantity, pos.quantity % 1 ? 4 : 0)));
+    ui.stats.appendChild(stat("Average price paid", money(pos.avgPrice, pos.currency)));
+    ui.stats.appendChild(stat("Current price", money(pos.price, pos.currency)));
+    ui.stats.appendChild(stat("Cost", money(pos.cost, state.account.currency)));
+    ui.stats.appendChild(stat("Value", money(pos.value, state.account.currency)));
+    ui.stats.appendChild(stat("Profit or loss", arrow(pos.pnl) + " " + (pos.pnl >= 0 ? "+" : "\u2212") + money(Math.abs(pos.pnl), state.account.currency) + " (" + signed(ret, 2, "%") + ")", tone(pos.pnl)));
+  }
+
   function renderDetail() {
     var pos = currentPos();
     if (!pos) return;
@@ -314,21 +335,12 @@
     });
 
     ui.title.textContent = pos.name + " (" + pos.symbol + ")";
-    ui.price.textContent = money(pos.price, pos.currency);
     ui.change.textContent = "";
     ui.chart.textContent = "";
-    ui.chart.appendChild(el("p", { class: "chart-msg", text: "Loading chart…" }));
+    ui.chart.appendChild(el("p", { class: "chart-msg", text: "Loading chart\u2026" }));
     ui.legend.textContent = "";
     ui.table.textContent = "";
-
-    var ret = pos.cost ? (pos.pnl / pos.cost) * 100 : 0;
-    ui.stats.textContent = "";
-    ui.stats.appendChild(stat("Shares", num(pos.quantity, pos.quantity % 1 ? 4 : 0)));
-    ui.stats.appendChild(stat("Average price paid", money(pos.avgPrice, pos.currency)));
-    ui.stats.appendChild(stat("Current price", money(pos.price, pos.currency)));
-    ui.stats.appendChild(stat("Cost", money(pos.cost, state.account.currency)));
-    ui.stats.appendChild(stat("Value", money(pos.value, state.account.currency)));
-    ui.stats.appendChild(stat("Profit or loss", arrow(pos.pnl) + " " + (pos.pnl >= 0 ? "+" : "−") + money(Math.abs(pos.pnl), state.account.currency) + " (" + signed(ret, 2, "%") + ")", tone(pos.pnl)));
+    updateDetailNumbers(pos);
 
     loadHistory(pos, range).then(function (series) {
       if (token !== state.token) return;
@@ -420,7 +432,7 @@
     for (var v = Math.ceil(tMin / step) * step; v <= tMax; v += step) {
       var y = Y(v).toFixed(1);
       grid += '<line x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + y + '" y2="' + y + '" stroke="var(--grid)" stroke-width="1"/>';
-      labels += '<text x="' + (W - m.r + 8) + '" y="' + (Number(y) + 4) + '" font-size="12" fill="var(--ink-soft)">' + esc(num(v, step < 1 ? 2 : step < 10 ? 1 : 0)) + "</text>";
+      labels += '<text x="' + (W - m.r + 8) + '" y="' + (Number(y) + 4) + '" font-size="12" fill="var(--fg-soft)">' + esc(num(v, step < 1 ? 2 : step < 10 ? 1 : 0)) + "</text>";
     }
 
     var xl = "";
@@ -428,7 +440,7 @@
     for (var k = 0; k < ticks; k++) {
       var idx = Math.round((k / (ticks - 1)) * (pts.length - 1));
       var anchor = k === 0 ? "start" : k === ticks - 1 ? "end" : "middle";
-      xl += '<text x="' + X(idx).toFixed(1) + '" y="' + (H - 8) + '" font-size="12" text-anchor="' + anchor + '" fill="var(--ink-soft)">' + esc(fmtTime(pts[idx].t, range)) + "</text>";
+      xl += '<text x="' + X(idx).toFixed(1) + '" y="' + (H - 8) + '" font-size="12" text-anchor="' + anchor + '" fill="var(--fg-soft)">' + esc(fmtTime(pts[idx].t, range)) + "</text>";
     }
 
     var d = "";
@@ -438,7 +450,7 @@
     var yBuy = Y(pos.avgPrice).toFixed(1);
     var buy =
       '<line x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + yBuy + '" y2="' + yBuy + '" stroke="var(--buy)" stroke-width="1.5" stroke-dasharray="6 5"/>' +
-      '<text x="' + (m.l + 4) + '" y="' + (Number(yBuy) - 6) + '" font-size="12" font-weight="600" fill="var(--ink)">You paid ' + esc(num(pos.avgPrice, 2)) + "</text>";
+      '<text x="' + (m.l + 4) + '" y="' + (Number(yBuy) - 6) + '" font-size="12" font-weight="600" fill="var(--fg)">You paid ' + esc(num(pos.avgPrice, 2)) + "</text>";
 
     var summary = pos.symbol + " price over " + range + ": from " + num(first, 2) + " to " + num(last, 2) +
       ", low " + num(lo, 2) + ", high " + num(hi, 2) + ". You paid " + num(pos.avgPrice, 2) + " on average.";
@@ -449,9 +461,9 @@
       '<path d="' + area + '" fill="var(--line)" fill-opacity="0.06"/>' +
       '<path d="' + d + '" fill="none" stroke="var(--line)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
       buy +
-      '<circle cx="' + X(pts.length - 1).toFixed(1) + '" cy="' + Y(last).toFixed(1) + '" r="4.5" fill="var(--line)" stroke="var(--card)" stroke-width="2"/>' +
-      '<g id="cross" style="display:none"><line id="cx" y1="' + m.t + '" y2="' + (m.t + ih) + '" stroke="var(--ink-soft)" stroke-width="1"/>' +
-      '<circle id="cd" r="5" fill="var(--line)" stroke="var(--card)" stroke-width="2"/></g>' +
+      '<circle cx="' + X(pts.length - 1).toFixed(1) + '" cy="' + Y(last).toFixed(1) + '" r="4.5" fill="var(--line)" stroke="var(--surface)" stroke-width="2"/>' +
+      '<g id="cross" style="display:none"><line id="cx" y1="' + m.t + '" y2="' + (m.t + ih) + '" stroke="var(--fg-soft)" stroke-width="1"/>' +
+      '<circle id="cd" r="5" fill="var(--line)" stroke="var(--surface)" stroke-width="2"/></g>' +
       '<rect id="hit" x="' + m.l + '" y="' + m.t + '" width="' + iw + '" height="' + ih + '" fill="transparent"/>' +
       "</svg>";
 
@@ -530,11 +542,11 @@
       var cls = r.ret >= 0 ? "var(--gain)" : "var(--loss)";
       var lblX = r.ret >= 0 ? bx + bw + 8 : bx - 8;
       var anchor = r.ret >= 0 ? "start" : "end";
-      out += '<text x="' + labelW + '" y="' + (y + 12) + '" font-size="13" font-weight="600" text-anchor="end" fill="var(--ink)">' + esc(r.symbol) + "</text>";
+      out += '<text x="' + labelW + '" y="' + (y + 12) + '" font-size="13" font-weight="600" text-anchor="end" fill="var(--fg)">' + esc(r.symbol) + "</text>";
       out += '<rect x="' + bx.toFixed(1) + '" y="' + y + '" width="' + bw.toFixed(1) + '" height="16" rx="2" fill="' + cls + '"/>';
-      out += '<text x="' + lblX.toFixed(1) + '" y="' + (y + 12.5) + '" font-size="13" text-anchor="' + anchor + '" fill="var(--ink)" style="font-variant-numeric:tabular-nums">' + esc(arrow(r.ret) + " " + signed(r.ret, 1, "%")) + "</text>";
+      out += '<text x="' + lblX.toFixed(1) + '" y="' + (y + 12.5) + '" font-size="13" text-anchor="' + anchor + '" fill="var(--fg)" style="font-variant-numeric:tabular-nums">' + esc(arrow(r.ret) + " " + signed(r.ret, 1, "%")) + "</text>";
     });
-    out += '<line x1="' + x0.toFixed(1) + '" x2="' + x0.toFixed(1) + '" y1="' + (mt - 6) + '" y2="' + (H - mb + 6) + '" stroke="var(--ink-soft)" stroke-width="1"/>';
+    out += '<line x1="' + x0.toFixed(1) + '" x2="' + x0.toFixed(1) + '" y1="' + (mt - 6) + '" y2="' + (H - mb + 6) + '" stroke="var(--fg-soft)" stroke-width="1"/>';
 
     var desc = "Return versus average price paid: " + rows.map(function (r) { return r.symbol + " " + signed(r.ret, 1, "%"); }).join(", ") + ".";
     ui.perfChart.innerHTML = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(desc) + '">' + out + "</svg>";
@@ -562,14 +574,78 @@
     });
   }
 
+  function stamp(text) {
+    modeNote.textContent = "";
+    modeNote.appendChild(el("span", { class: "dot", "aria-hidden": "true" }));
+    modeNote.appendChild(document.createTextNode(text));
+  }
+
+  function clock() {
+    return new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  }
+
+  var pollTimer = null;
+  var refreshing = false;
+
+  function refresh() {
+    if (!LIVE || document.hidden || refreshing || !state.positions.length) return;
+    refreshing = true;
+    loadPortfolio().then(function (data) {
+      refreshing = false;
+      if (data.account && (data.account.investments || !state.account.investments)) state.account = data.account;
+      state.positions = data.positions || state.positions;
+      stamp("Live data from Trading 212. Updated " + clock());
+      renderSummary();
+      renderList();
+      var pos = currentPos();
+      if (pos) {
+        updateDetailNumbers(pos);
+        Object.keys(state.series).forEach(function (key) {
+          if (key.indexOf(pos.symbol + "|") !== 0) return;
+          var pts = state.series[key].points;
+          if (pts && pts.length) pts[pts.length - 1].c = pos.price;
+        });
+        var cached = state.series[pos.symbol + "|" + state.range];
+        if (cached) drawPriceChart(pos, cached, state.range);
+      }
+      drawPerfChart();
+    }).catch(function (err) {
+      refreshing = false;
+      if (err.auth) { setCode(""); return showGate("Your access code was not accepted."); }
+      stamp("Could not refresh. Showing the last update.");
+    });
+  }
+
+  function startPolling() {
+    if (pollTimer || !LIVE) return;
+    var secs = Math.max(15, Number(cfg.refreshSeconds) || 30);
+    pollTimer = setInterval(refresh, secs * 1000);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) refresh(); });
+  }
+
+  function showProblem(message) {
+    app.textContent = "";
+    var box = el("div", { class: "problem" }, [el("p", { text: message })]);
+    var retry = el("button", { class: "button", type: "button", text: "Try again" });
+    retry.addEventListener("click", start);
+    var sample = el("button", { class: "button", type: "button", text: "View sample data" });
+    sample.addEventListener("click", function () { LIVE = false; start(); });
+    box.appendChild(retry);
+    box.appendChild(document.createTextNode(" "));
+    box.appendChild(sample);
+    app.appendChild(box);
+  }
+
   function start() {
     if (LIVE && !getCode()) return showGate("");
-    modeNote.textContent = LIVE ? "Live data from Trading 212" : "Sample data. Connect your Trading 212 account to see your own holdings.";
+    stamp(LIVE ? "Connecting to Trading 212" : "Sample data. Connect your Trading 212 account to see your own holdings.");
     app.textContent = "";
-    app.appendChild(el("p", { class: "chart-msg", text: "Loading portfolio…" }));
+    app.appendChild(el("p", { class: "chart-msg", text: "Loading portfolio\u2026" }));
     loadPortfolio().then(function (data) {
       state.account = data.account || { currency: "GBP" };
       state.positions = data.positions || [];
+      state.series = {};
+      state.news = {};
       if (!state.positions.length) {
         app.textContent = "";
         app.appendChild(el("p", { class: "chart-msg", text: "No open positions found in this account." }));
@@ -579,10 +655,12 @@
       state.selected = best.symbol;
       buildLayout();
       render();
+      if (LIVE) { stamp("Live data from Trading 212. Updated " + clock()); startPolling(); }
+      else stamp("Sample data. Connect your Trading 212 account to see your own holdings.");
     }).catch(function (err) {
-      if (err.auth) { setCode(""); return showGate("That access code was not accepted."); }
-      app.textContent = "";
-      app.appendChild(el("p", { class: "chart-msg", text: "The portfolio could not load. Check the environment variables in Vercel and that the Trading 212 key is valid." }));
+      if (err.auth) { setCode(""); return showGate("Your access code was not accepted."); }
+      stamp("Not connected");
+      showProblem("The portfolio could not load. Check that the Vercel environment variables are set and that the Trading 212 key has the Account data permission.");
     });
   }
 

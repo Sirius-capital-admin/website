@@ -1,0 +1,146 @@
+/* Home: orbit diagram that scrolls into the About text. */
+
+.story { position: relative; }
+
+/* Default layout (no JavaScript, or reduced motion): plain stacked sections. */
+.stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(var(--header-h) + 2rem) var(--gutter) 4rem;
+  gap: 1.5rem;
+}
+
+.anchor { position: absolute; left: 0; top: 100svh; width: 1px; height: 1px; }
+
+.hero-copy { text-align: center; }
+
+.hero-copy h1 {
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.5rem;
+}
+
+.lede { margin: 0; font-size: 1.2rem; color: var(--fg-soft); }
+
+.orbit-wrap { width: min(92vw, 44rem); }
+.orbit-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+.orbit-wrap text { font-family: var(--sans); paint-order: stroke; stroke: #000; stroke-width: 4px; stroke-linejoin: round; }
+
+.orbit-note {
+  margin: 0;
+  max-width: 34rem;
+  text-align: center;
+  color: var(--fg-soft);
+  font-size: 0.95rem;
+}
+
+.cue { display: none; }
+
+.about-copy { max-width: 34rem; margin-top: 3rem; }
+.about-copy h2 { font-size: clamp(2rem, 4vw, 3rem); margin: 0 0 1rem; line-height: 1.1; }
+.about-copy p { margin: 0 0 1rem; }
+.about-copy .small { color: var(--fg-soft); font-size: 0.95rem; }
+
+/* Pinned scroll story. JavaScript sets opacity and transforms from scroll position. */
+html.pin .story { height: 260vh; }
+html.pin .anchor { top: 136vh; }
+
+html.pin .stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: block;
+  padding: 0;
+}
+
+html.pin .hero-copy {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  top: calc(var(--header-h) + 1.5vh);
+  will-change: opacity, transform;
+}
+
+html.pin .orbit-wrap {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: max(17rem, min(92vw, 44rem, calc((100svh - 19rem) * 1.538)));
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+html.pin .orbit-note {
+  position: absolute;
+  left: 50%;
+  bottom: 4.6rem;
+  width: min(30rem, calc(100% - 2 * var(--gutter)));
+  transform: translateX(-50%);
+  will-change: opacity;
+}
+
+html.pin .cue {
+  position: absolute;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--fg-soft);
+  text-decoration: none;
+}
+
+.cue i {
+  display: block;
+  width: 1px;
+  height: 1.6rem;
+  background: linear-gradient(to bottom, var(--fg), transparent);
+  transform-origin: top;
+  animation: cue 2.2s ease-in-out infinite;
+}
+
+@keyframes cue {
+  0% { transform: scaleY(0); opacity: 1; }
+  60% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+html.pin .about-copy {
+  position: absolute;
+  left: var(--gutter);
+  top: 50%;
+  margin: 0;
+  width: min(32rem, 44vw);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(calc(-50% + 40px));
+  will-change: opacity, transform;
+}
+
+@media (max-width: 52rem) {
+  html.pin .about-copy {
+    top: auto;
+    bottom: 5svh;
+    width: auto;
+    right: var(--gutter);
+    transform: translateY(40px);
+  }
+  html.pin .about-copy h2 { font-size: 1.9rem; margin-bottom: 0.5rem; }
+  html.pin .about-copy .small { display: none; }
+}
+
+@media (max-height: 40rem) {
+  html.pin .orbit-note { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cue i { animation: none; }
+}

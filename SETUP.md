@@ -31,9 +31,9 @@ In Trading 212: Settings, then API (Beta), then Generate API key.
 
 4. Deploy.
 
-## 4. Switch on live data
+## 4. Open the Portfolio page
 
-In `js/config.js` change `live: false` to `live: true`, commit and push. Vercel redeploys on every push. Open `/portfolio.html` and enter your access code.
+`js/config.js` already has `live: true`. Once the environment variables are set and the site is deployed, open `/portfolio.html`, enter your access code, and your account balance, holdings and prices appear. Prices refresh every 30 seconds. Set `live: false` to show sample data instead.
 
 ## Notes
 

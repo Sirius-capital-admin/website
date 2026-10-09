@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Portfolio | Sirius Capital</title>
   <meta name="robots" content="noindex">
-  <meta name="description" content="Holdings, price history and news from the Sirius Capital Trading 212 account.">
+  <meta name="description" content="Holdings, prices, account balance and news from the Sirius Capital Trading 212 account.">
+  <meta name="color-scheme" content="dark">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -13,16 +14,17 @@
   <link rel="stylesheet" href="css/portfolio.css">
 </head>
 <body>
+  <canvas id="space" aria-hidden="true"></canvas>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Sirius Capital, home">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12 7.2-1.2 11.4-5.4 12-12z" fill="#2443c4"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12 7.2-1.2 11.4-5.4 12-12z" fill="#bcd8ff"/></svg>
       Sirius Capital
     </a>
     <nav class="site-nav" aria-label="Main">
       <a href="index.html">Home</a>
-      <a href="about.html">About us</a>
+      <a href="index.html#about">About</a>
       <a href="portfolio.html" aria-current="page">Portfolio</a>
     </nav>
   </header>
@@ -30,8 +32,8 @@
   <main id="main">
     <div class="pf-head">
       <h1>Portfolio</h1>
-      <p>Every holding with its price history, the price you paid and the latest news, in one place.</p>
-      <span class="mode-note" id="mode-note">Loading</span>
+      <p>Your Trading 212 account: balance, holdings and live prices, with a chart and news for each stock.</p>
+      <span class="mode-note" id="mode-note" role="status">Loading</span>
     </div>
 
     <div class="pf-wrap">
@@ -40,11 +42,12 @@
   </main>
 
   <footer class="site-footer">
-    <span>&copy; <span id="year">2026</span> Sirius Capital</span>
+    <span>&copy; <span id="year">2026</span> Sirius Capital. An investing test website.</span>
     <a href="index.html">Home</a>
   </footer>
 
   <script src="js/config.js"></script>
+  <script src="js/space.js"></script>
   <script src="js/main.js"></script>
   <script src="js/portfolio.js"></script>
 </body>

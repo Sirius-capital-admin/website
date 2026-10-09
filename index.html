@@ -4,95 +4,102 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sirius Capital</title>
-  <meta name="description" content="Sirius Capital is an investment firm built on patient capital, clear reasoning and plain communication.">
+  <meta name="description" content="Sirius Capital is an investing test website that tracks a Trading 212 portfolio.">
+  <meta name="color-scheme" content="dark">
+  <script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("pin");</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
+  <canvas id="space" aria-hidden="true"></canvas>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Sirius Capital, home">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12 7.2-1.2 11.4-5.4 12-12z" fill="#2443c4"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c.6 6.6 4.8 10.8 12 12-7.2 1.2-11.4 5.4-12 12-.6-6.6-4.8-10.8-12-12 7.2-1.2 11.4-5.4 12-12z" fill="#bcd8ff"/></svg>
       Sirius Capital
     </a>
     <nav class="site-nav" aria-label="Main">
       <a href="index.html" aria-current="page">Home</a>
-      <a href="about.html">About us</a>
+      <a href="index.html#about">About</a>
       <a href="portfolio.html">Portfolio</a>
     </nav>
   </header>
 
   <main id="main">
-    <section class="hero">
-      <div>
-        <h1>Capital that stays<br>for the long run.</h1>
-        <p class="lede">Sirius Capital invests with patience and explains its decisions in plain language. We want our partners to understand every position we take and why we took it.</p>
-        <a class="button" href="about.html">About us</a>
-      </div>
+    <section class="story" id="story">
+      <span class="anchor" id="about"></span>
+      <div class="stage" id="stage">
 
-      <figure class="orbit">
-        <svg viewBox="0 0 600 600" role="img" aria-labelledby="orbit-title">
-          <title id="orbit-title">Diagram of Sirius B orbiting the brighter star Sirius A</title>
-          <g transform="translate(300 300) rotate(-20)">
-            <path id="orbit-path" d="M 230 0 A 230 140 0 1 1 -230 0 A 230 140 0 1 1 230 0" fill="none" stroke="#0e1a2e" stroke-opacity="0.35" stroke-width="1.25" stroke-dasharray="2 6"/>
-            <circle cx="182.5" cy="0" r="46" fill="#2443c4" fill-opacity="0.12"/>
-            <circle cx="182.5" cy="0" r="26" fill="#2443c4" fill-opacity="0.25"/>
-            <circle cx="182.5" cy="0" r="13" fill="#2443c4"/>
-            <circle r="5" fill="#0e1a2e">
-              <animateMotion dur="40s" repeatCount="indefinite" rotate="0">
-                <mpath href="#orbit-path"/>
-              </animateMotion>
-            </circle>
-          </g>
-        </svg>
-        <figcaption>Sirius is a pair of stars. The small, faint one circles the bright one about once every fifty years.</figcaption>
-      </figure>
-    </section>
-
-    <section class="band">
-      <div class="band-inner split">
-        <h2>How we invest</h2>
-        <div>
-          <div class="prose">
-            <p>We hold investments for years, not quarters. That lets us back businesses on the strength of what they do rather than on how the market feels this month.</p>
-          </div>
-          <div class="pillars">
-            <div>
-              <h3>Patient</h3>
-              <p>We size positions for the long term and accept slow, steady progress.</p>
-            </div>
-            <div>
-              <h3>Reasoned</h3>
-              <p>Every investment starts with a written case that we can check against later.</p>
-            </div>
-            <div>
-              <h3>Plain-spoken</h3>
-              <p>We report results as they are, including the ones we got wrong.</p>
-            </div>
-          </div>
+        <div class="hero-copy" id="hero-copy">
+          <h1>Sirius Capital</h1>
+          <p class="lede">An investing test website.</p>
         </div>
-      </div>
-    </section>
 
-    <section class="band tint">
-      <div class="band-inner split">
-        <h2>Work with us</h2>
-        <div class="prose">
-          <p>If you would like to talk about working together, start with who we are and how we think.</p>
-          <p><a class="button" href="about.html">About us</a></p>
+        <div class="orbit-wrap" id="orbit-wrap">
+          <svg id="orbit" viewBox="0 0 800 520" role="img" aria-labelledby="orbit-t orbit-d">
+            <title id="orbit-t">Sirius A and Sirius B orbiting their common centre of mass</title>
+            <desc id="orbit-d">A large bright star, Sirius A, and a small faint star, Sirius B, circle a shared point. Sirius B travels a much wider path than Sirius A and moves fastest when it passes closest.</desc>
+            <defs>
+              <radialGradient id="glow-a">
+                <stop offset="0" stop-color="#ffffff"/>
+                <stop offset="0.18" stop-color="#e6f0ff"/>
+                <stop offset="0.5" stop-color="#8fb8ff" stop-opacity="0.35"/>
+                <stop offset="1" stop-color="#5a8dff" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="glow-b">
+                <stop offset="0" stop-color="#ffffff"/>
+                <stop offset="0.4" stop-color="#ffffff" stop-opacity="0.45"/>
+                <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <g id="orbits" fill="none" stroke-linecap="round"></g>
+            <g id="centre"></g>
+            <line id="link" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1" stroke-dasharray="3 5"/>
+            <path id="trail" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round"/>
+            <g id="star-a">
+              <circle r="46" fill="url(#glow-a)"/>
+              <path d="M0 -34 L2.2 -2.2 L34 0 L2.2 2.2 L0 34 L-2.2 2.2 L-34 0 L-2.2 -2.2Z" fill="#dbe9ff" fill-opacity="0.75"/>
+              <circle r="9" fill="#ffffff"/>
+              <text id="label-a" x="16" y="-18" fill="#ffffff" font-size="15" font-weight="600">Sirius A</text>
+            </g>
+            <g id="star-b">
+              <circle r="14" fill="url(#glow-b)"/>
+              <circle r="3.6" fill="#ffffff"/>
+              <text id="label-b" x="10" y="-10" fill="#ffffff" font-size="15" font-weight="600">Sirius B</text>
+            </g>
+          </svg>
         </div>
+
+        <p class="orbit-note" id="orbit-note">Sirius is two stars. The faint one, Sirius B, circles the bright one about every 50 years. Here, one second is about 1.4 years.</p>
+
+        <a class="cue" id="cue" href="#about" aria-label="Scroll to About">
+          <span>Scroll</span>
+          <i aria-hidden="true"></i>
+        </a>
+
+        <div class="about-copy" id="about-copy">
+          <h2>About</h2>
+          <p>Sirius Capital is an investing test website. It is a place to try out ideas for tracking investments.</p>
+          <p>The Portfolio page shows the holdings, prices and balance from a Trading 212 account, with a chart and news for each stock.</p>
+          <p class="small">Sirius is the brightest star in our night sky and is really two stars orbiting each other. That is the picture above. Nothing on this site is financial advice.</p>
+          <p><a class="button" href="portfolio.html">Open portfolio</a></p>
+        </div>
+
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <span>&copy; <span id="year">2026</span> Sirius Capital</span>
-    <a href="about.html">About us</a>
+    <span>&copy; <span id="year">2026</span> Sirius Capital. An investing test website.</span>
+    <a href="portfolio.html">Portfolio</a>
   </footer>
 
+  <script src="js/space.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/home.js"></script>
 </body>
 </html>
